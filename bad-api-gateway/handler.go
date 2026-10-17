@@ -32,8 +32,7 @@ type gateway struct {
 }
 
 // 登录上游,拉取用户档案以及每门已修课程的成绩,汇总成一个统一结果
-func (g *gateway) aggregate() (totalResponse, error)
-{
+func (g *gateway) aggregate() (totalResponse, error) {
 	token, err := g.upstream.login()
 	if err != nil {
 		return totalResponse{}, err
@@ -55,7 +54,7 @@ func (g *gateway) aggregate() (totalResponse, error)
 		result.CompletedCourses = append(result.CompletedCourses, courseResult{Course: course, TotalScore: score.TotalScore, GradePoint: score.GradePoint})
 	}
 
-	return result, 0
+	return result, nil
 }
 
 // 取学号的前四位作为年级 (cohort),例如 2025114514 -> 2025

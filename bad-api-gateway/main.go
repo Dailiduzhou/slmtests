@@ -16,8 +16,9 @@ func main() {
 	m.HandleFunc("/api/total", g.totalHandler)
 	m.HandleFunc("/api/totalCreditsEarned", g.creditsEarnedHandler)
 
-	log.Printf("api-gateway listening on %d (upstream: %d)", ":8080", b)
-	if err = http.ListenAndServe(":8080", m); err != nil {
+	addr := ":" + env("PORT", "8080")
+	log.Printf("api-gateway listening on %s (upstream: %s)", addr, b)
+	if err := http.ListenAndServe(addr, m); err != nil {
 		log.Fatal(err)
 	}
 }
