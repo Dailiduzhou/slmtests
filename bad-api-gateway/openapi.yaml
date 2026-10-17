@@ -1,0 +1,119 @@
+openapi: 3.0.3
+info:
+  title: Student API Gateway
+  description: none
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+    description: 本地开发环境
+
+paths:
+  /api/total:
+    get:
+      summary: 获取用户总览
+      description: |
+        返回当前用户档案及每门已修课程的完整成绩.
+        `cohort` 由学号前四位推导, 例如 `2025114514` -> `2025`.
+      operationId: getTotal
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Total'
+              example:
+                name: wajueji
+                cohort: 2025
+                completedCourses:
+                  - course: math
+                    totalScore: 60
+                    gradePoint: 1.5
+                  - course: c
+                    totalScore: 100
+                    gradePoint: 2.5
+        '502':
+          description: 上游数据源不可用或返回错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/totalCreditsEarned:
+    get:
+      summary: 获取已修课程绩点之和
+      description: 汇总所有已修课程的 `gradePoint`, 返回其总和.
+      operationId: getTotalCreditsEarned
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreditsEarned'
+              example:
+                totalCreditsEarned: 4
+        '502':
+          description: 上游数据源不可用或返回错误
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    Total:
+      type: object
+      required:
+        - name
+        - cohort
+        - completedCourses
+      properties:
+        name:
+          type: string
+          example: wajueji
+        cohort:
+          type: integer
+          description: 学号前四位.
+          example: 2025
+        completedCourses:
+          type: array
+          items:
+            $ref: '#/components/schemas/CourseResult'
+
+    CourseResult:
+      type: object
+      required:
+        - course
+        - totalScore
+        - gradePoint
+      properties:
+        course:
+          type: string
+          example: math
+        totalScore:
+          type: integer
+          example: 60
+        gradePoint:
+          type: number
+          format: double
+          example: 1.5
+
+    CreditsEarned:
+      type: object
+      required:
+        - totalCreditsEarned
+      properties:
+        totalCreditsEarned:
+          type: number
+          format: double
+          example: 4
+
+    Error:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          example: upstream error
