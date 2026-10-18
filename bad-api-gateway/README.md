@@ -13,6 +13,13 @@ go run .
 # 默认监听 :8080
 ```
 
+## 环境变量
+
+- `PORT` — 监听端口,默认 `8080`
+- `UPSTREAM_URL` — 上游地址,默认 `https://tottering.muxixyz.com`
+- `UPSTREAM_USER` — 上游测试账号,默认 `wajueji`
+- `UPSTREAM_PASS` — 上游测试密码,默认 `12345678`
+
 ## 接口
 
 ### `GET /api/total`
@@ -45,3 +52,4 @@ go run .
 | `main.go` | 程序入口、路由注册、监听端口 |
 | `client.go` | 上游数据源客户端(登录、带认证 GET) |
 | `handler.go` | 网关 handler、数据聚合、JSON 输出 |
+| `env.go` | 读取环境变量,未设置时用默认值 |
